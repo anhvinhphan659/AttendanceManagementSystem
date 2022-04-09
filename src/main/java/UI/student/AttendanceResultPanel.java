@@ -3,19 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package UI.student;
+
 import javax.swing.*;
-import javax.swing.table.*;
 
 /**
  *
  * @author Windows 10
  */
-public class AttendanceResultPanel extends JPanel {
+public class AttendanceResultPanel extends javax.swing.JPanel {
 
+    private JFrame mainFrame;
     /**
      * Creates new form AttendanceResultPanel
      */
-    public AttendanceResultPanel() {
+    public AttendanceResultPanel(JFrame mainFrame) {
+        this.mainFrame=mainFrame;
         initComponents();
     }
 
@@ -28,14 +30,14 @@ public class AttendanceResultPanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new JPanel();
-        jLabel1 = new JLabel();
-        jPanel3 = new JPanel();
-        Semester = new JLabel();
-        semesterCB = new JComboBox<>();
-        jPanel2 = new JPanel();
-        jScrollPane1 = new JScrollPane();
-        jTable2 = new JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        Semester = new javax.swing.JLabel();
+        semesterCB = new javax.swing.JComboBox<>();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -54,7 +56,7 @@ public class AttendanceResultPanel extends JPanel {
         Semester.setText("Semester:");
         jPanel3.add(Semester);
 
-        semesterCB.setModel(new DefaultComboBoxModel<>(new String[] { "Semester 1" }));
+        semesterCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semester 1" }));
         semesterCB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 semesterCBActionPerformed(evt);
@@ -69,7 +71,7 @@ public class AttendanceResultPanel extends JPanel {
         jPanel2.setMinimumSize(new java.awt.Dimension(0, 400));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jTable2.setModel(new DefaultTableModel(
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -101,13 +103,13 @@ public class AttendanceResultPanel extends JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JLabel Semester;
-    private JLabel jLabel1;
-    private JPanel jPanel1;
-    private JPanel jPanel2;
-    private JPanel jPanel3;
-    private JScrollPane jScrollPane1;
-    private JTable jTable2;
-    private JComboBox<String> semesterCB;
+    private javax.swing.JLabel Semester;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JComboBox<String> semesterCB;
     // End of variables declaration//GEN-END:variables
 }

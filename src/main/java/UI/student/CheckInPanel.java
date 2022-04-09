@@ -3,19 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package UI.student;
+
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 /**
  *
  * @author Windows 10
  */
-public class CheckInPanel extends JPanel {
+public class CheckInPanel extends javax.swing.JPanel {
 
+    private JFrame mainFrame;
     /**
      * Creates new form CheckInPanel
      */
-    public CheckInPanel() {
+    public CheckInPanel(JFrame mainFrame) {
+        this.mainFrame=mainFrame;
         initComponents();
     }
 
@@ -28,22 +30,22 @@ public class CheckInPanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new JPanel();
-        jLabel1 = new JLabel();
-        jPanel3 = new JPanel();
-        jScrollPane1 = new JScrollPane();
-        jPanel2 = new JPanel();
-        jPanel4 = new JPanel();
-        jPanel6 = new JPanel();
-        courseNameLB = new JLabel();
-        scheduleLB = new JLabel();
-        jPanel5 = new JPanel();
-        jPanel7 = new JPanel();
-        checkInBtn = new JButton();
-        checkInStateLB = new JLabel();
-        jPanel8 = new JPanel();
-        jLabel6 = new JLabel();
-        nextTimeLB = new JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        courseNameLB = new javax.swing.JLabel();
+        scheduleLB = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        checkInBtn = new javax.swing.JButton();
+        checkInStateLB = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        nextTimeLB = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -53,30 +55,30 @@ public class CheckInPanel extends JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("COURSE CHECK-IN");
 
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 367, GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(372, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
         add(jPanel1, java.awt.BorderLayout.NORTH);
 
-        jPanel3.setBorder(new EmptyBorder(10,10,10,10)
+        jPanel3.setBorder(new javax.swing.border.EmptyBorder(10,10,10,10)
         );
         jPanel3.setLayout(new java.awt.BorderLayout());
 
-        jPanel2.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jPanel2.setMaximumSize(new java.awt.Dimension(32767, 100));
 
         jPanel4.setBackground(new java.awt.Color(204, 102, 0));
@@ -92,7 +94,7 @@ public class CheckInPanel extends JPanel {
 
         scheduleLB.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 12)); // NOI18N
         scheduleLB.setText("Schedule");
-        scheduleLB.setVerticalTextPosition(SwingConstants.TOP);
+        scheduleLB.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         jPanel6.add(scheduleLB, java.awt.BorderLayout.CENTER);
 
         jPanel4.add(jPanel6, java.awt.BorderLayout.CENTER);
@@ -136,21 +138,21 @@ public class CheckInPanel extends JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton checkInBtn;
-    private JLabel checkInStateLB;
-    private JLabel courseNameLB;
-    private JLabel jLabel1;
-    private JLabel jLabel6;
-    private JPanel jPanel1;
-    private JPanel jPanel2;
-    private JPanel jPanel3;
-    private JPanel jPanel4;
-    private JPanel jPanel5;
-    private JPanel jPanel6;
-    private JPanel jPanel7;
-    private JPanel jPanel8;
-    private JScrollPane jScrollPane1;
-    private JLabel nextTimeLB;
-    private JLabel scheduleLB;
+    private javax.swing.JButton checkInBtn;
+    private javax.swing.JLabel checkInStateLB;
+    private javax.swing.JLabel courseNameLB;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel nextTimeLB;
+    private javax.swing.JLabel scheduleLB;
     // End of variables declaration//GEN-END:variables
 }

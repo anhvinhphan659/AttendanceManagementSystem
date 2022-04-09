@@ -3,21 +3,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package UI.minister;
-import javax.swing.*;
-import javax.swing.table.*;
 
+
+import UI.MainFrame;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
  * @author Windows 10
  */
-public class StudentAttendancePanel extends JPanel {
+public class StudentAttendancePanel extends javax.swing.JPanel {
 
+    private MainFrame mainFrame;
     /**
      * Creates new form AttendanceResultPanel
      */
-    public StudentAttendancePanel() {
+    public StudentAttendancePanel(MainFrame mainFrame) {
+        this.mainFrame=mainFrame;
         initComponents();
+        setUpAction();
     }
 
     /**
@@ -29,21 +36,22 @@ public class StudentAttendancePanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new JPanel();
-        jLabel1 = new JLabel();
-        jPanel3 = new JPanel();
-        Semester = new JLabel();
-        semesterCB = new JComboBox<>();
-        jLabel2 = new JLabel();
-        subjectCB = new JComboBox<>();
-        jLabel3 = new JLabel();
-        classCB = new JComboBox<>();
-        jPanel2 = new JPanel();
-        jPanel4 = new JPanel();
-        jScrollPane1 = new JScrollPane();
-        jTable2 = new JTable();
-        annotatePanel = new JPanel();
-        jButton1 = new JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        subjectCB = new javax.swing.JComboBox<>();
+        jPanel7 = new javax.swing.JPanel();
+        showBtn = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        backBtn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        annotatePanel = new javax.swing.JPanel();
+        applyBtn = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -52,42 +60,47 @@ public class StudentAttendancePanel extends JPanel {
         jPanel1.setPreferredSize(new java.awt.Dimension(746, 70));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("ATTENDANCE RESULT");
-        jPanel1.add(jLabel1, java.awt.BorderLayout.CENTER);
-
         jPanel3.setPreferredSize(new java.awt.Dimension(746, 40));
-        jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 20, 5));
-
-        Semester.setText("Semester:");
-        jPanel3.add(Semester);
-
-        semesterCB.setModel(new DefaultComboBoxModel<>(new String[] { "Semester 1" }));
-        semesterCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                semesterCBActionPerformed(evt);
-            }
-        });
-        jPanel3.add(semesterCB);
+        jPanel3.setLayout(new java.awt.BorderLayout());
 
         jLabel2.setText("Subject:");
-        jPanel3.add(jLabel2);
+        jPanel6.add(jLabel2);
 
-        subjectCB.setModel(new DefaultComboBoxModel<>(new String[] { "Subject1" }));
+        subjectCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Subject1" }));
         subjectCB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 subjectCBActionPerformed(evt);
             }
         });
-        jPanel3.add(subjectCB);
+        jPanel6.add(subjectCB);
 
-        jLabel3.setText("Class:");
-        jPanel3.add(jLabel3);
+        jPanel3.add(jPanel6, java.awt.BorderLayout.CENTER);
 
-        classCB.setModel(new DefaultComboBoxModel<>(new String[] { "Class1" }));
-        jPanel3.add(classCB);
+        jPanel7.setPreferredSize(new java.awt.Dimension(120, 100));
+        jPanel7.setLayout(new java.awt.GridBagLayout());
+
+        showBtn.setText("Show");
+        showBtn.setPreferredSize(new java.awt.Dimension(100, 35));
+        jPanel7.add(showBtn, new java.awt.GridBagConstraints());
+
+        jPanel3.add(jPanel7, java.awt.BorderLayout.EAST);
 
         jPanel1.add(jPanel3, java.awt.BorderLayout.SOUTH);
+
+        jPanel5.setPreferredSize(new java.awt.Dimension(787, 35));
+        jPanel5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        backBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UI/resources/previous.png"))); // NOI18N
+        backBtn.setPreferredSize(new java.awt.Dimension(25, 25));
+        jPanel5.add(backBtn);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("STUDENT ATTENDANCE");
+        jLabel1.setMinimumSize(new java.awt.Dimension(252, 30));
+        jLabel1.setPreferredSize(new java.awt.Dimension(400, 30));
+        jPanel5.add(jLabel1);
+
+        jPanel1.add(jPanel5, java.awt.BorderLayout.PAGE_START);
 
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
@@ -98,7 +111,7 @@ public class StudentAttendancePanel extends JPanel {
 
         jScrollPane1.setMaximumSize(new java.awt.Dimension(300, 32767));
 
-        jTable2.setModel(new DefaultTableModel(
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -119,49 +132,72 @@ public class StudentAttendancePanel extends JPanel {
         annotatePanel.setMinimumSize(new java.awt.Dimension(100, 10));
         annotatePanel.setPreferredSize(new java.awt.Dimension(120, 600));
 
-        jButton1.setIcon(new ImageIcon(getClass().getResource("/com/mycompany/swingutilproject/resource/check-mark.png"))); // NOI18N
-        jButton1.setText("Apply");
-        jButton1.setPreferredSize(new java.awt.Dimension(105, 35));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        applyBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UI/resources/check-mark.png"))); // NOI18N
+        applyBtn.setText("Apply");
+        applyBtn.setPreferredSize(new java.awt.Dimension(105, 35));
+        applyBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                applyBtnActionPerformed(evt);
             }
         });
-        annotatePanel.add(jButton1);
+
+        javax.swing.GroupLayout annotatePanelLayout = new javax.swing.GroupLayout(annotatePanel);
+        annotatePanel.setLayout(annotatePanelLayout);
+        annotatePanelLayout.setHorizontalGroup(
+            annotatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(annotatePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(applyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(9, Short.MAX_VALUE))
+        );
+        annotatePanelLayout.setVerticalGroup(
+            annotatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, annotatePanelLayout.createSequentialGroup()
+                .addContainerGap(394, Short.MAX_VALUE)
+                .addComponent(applyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         jPanel2.add(annotatePanel, java.awt.BorderLayout.EAST);
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void semesterCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_semesterCBActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_semesterCBActionPerformed
+    private void setUpAction()
+    {
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel(new MinisterMenuPanel(mainFrame));
+            }
+        });
+    }
 
     private void subjectCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subjectCBActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_subjectCBActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void applyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_applyBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JLabel Semester;
-    private JPanel annotatePanel;
-    private JComboBox<String> classCB;
-    private JButton jButton1;
-    private JLabel jLabel1;
-    private JLabel jLabel2;
-    private JLabel jLabel3;
-    private JPanel jPanel1;
-    private JPanel jPanel2;
-    private JPanel jPanel3;
-    private JPanel jPanel4;
-    private JScrollPane jScrollPane1;
-    private JTable jTable2;
-    private JComboBox<String> semesterCB;
-    private JComboBox<String> subjectCB;
+    private javax.swing.JPanel annotatePanel;
+    private javax.swing.JButton applyBtn;
+    private javax.swing.JButton backBtn;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JButton showBtn;
+    private javax.swing.JComboBox<String> subjectCB;
     // End of variables declaration//GEN-END:variables
 }

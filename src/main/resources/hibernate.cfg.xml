@@ -24,9 +24,12 @@
         <!-- Set the current session context -->
         <property name="current_session_context_class">thread</property>
 
-        <property name="hibernate.hbm2ddl.auto">create</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Mapping class -->
+        <mapping class="POJO.Account"></mapping>
+        <mapping class="POJO.Subject"></mapping>
+        <mapping class="POJO.Attendance"></mapping>
 <!--        <mapping class="com.vinhphan.model.Student"></mapping>-->
 <!--        <mapping class="com.vinhphan.model.Answer"></mapping>-->
 <!--        <mapping class="com.vinhphan.model.Question"></mapping>-->

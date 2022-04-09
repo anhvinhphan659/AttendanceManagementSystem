@@ -3,17 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package UI.student;
+
 import javax.swing.*;
+
 /**
  *
  * @author Windows 10
  */
-public class CheckInItem extends JPanel {
+public class CheckInItem extends javax.swing.JPanel {
 
+    private JFrame mainFrame;
     /**
      * Creates new form CheckInItem
      */
-    public CheckInItem() {
+    public CheckInItem(JFrame mainFrame) {
+        this.mainFrame=mainFrame;
         initComponents();
     }
 
@@ -26,16 +30,16 @@ public class CheckInItem extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel6 = new JPanel();
-        courseNameLB = new JLabel();
-        scheduleLB = new JLabel();
-        jPanel5 = new JPanel();
-        jPanel7 = new JPanel();
-        checkInBtn = new JButton();
-        checkInStateLB = new JLabel();
-        jPanel8 = new JPanel();
-        jLabel6 = new JLabel();
-        nextTimeLB = new JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        courseNameLB = new javax.swing.JLabel();
+        scheduleLB = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        checkInBtn = new javax.swing.JButton();
+        checkInStateLB = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        nextTimeLB = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -47,7 +51,7 @@ public class CheckInItem extends JPanel {
 
         scheduleLB.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 12)); // NOI18N
         scheduleLB.setText("Schedule");
-        scheduleLB.setVerticalTextPosition(SwingConstants.TOP);
+        scheduleLB.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         jPanel6.add(scheduleLB, java.awt.BorderLayout.CENTER);
 
         add(jPanel6, java.awt.BorderLayout.CENTER);
@@ -83,15 +87,15 @@ public class CheckInItem extends JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton checkInBtn;
-    private JLabel checkInStateLB;
-    private JLabel courseNameLB;
-    private JLabel jLabel6;
-    private JPanel jPanel5;
-    private JPanel jPanel6;
-    private JPanel jPanel7;
-    private JPanel jPanel8;
-    private JLabel nextTimeLB;
-    private JLabel scheduleLB;
+    private javax.swing.JButton checkInBtn;
+    private javax.swing.JLabel checkInStateLB;
+    private javax.swing.JLabel courseNameLB;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JLabel nextTimeLB;
+    private javax.swing.JLabel scheduleLB;
     // End of variables declaration//GEN-END:variables
 }

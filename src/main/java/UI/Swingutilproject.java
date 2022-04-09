@@ -5,8 +5,6 @@
 
 package UI;
 
-import UI.minister.ModifySubjectPanel;
-
 import java.awt.Dimension;
 import javax.swing.*;
 public class Swingutilproject {
@@ -15,7 +13,7 @@ public class Swingutilproject {
         System.out.println("Hello World!");
         JFrame mainFrame=new JFrame();
         mainFrame.setSize(new Dimension(800,600));
-        mainFrame.add(new ModifySubjectPanel());
+
         mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainFrame.setVisible(true);
     }
