@@ -4,7 +4,12 @@
  */
 package UI.student;
 
-import javax.swing.*;
+import UI.ChangePassPanel;
+import UI.MainFrame;
+import UI.MainPanel;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -12,14 +17,14 @@ import javax.swing.*;
  */
 public class StudentMenuPanel extends javax.swing.JPanel {
 
-    private JFrame mainFrame;
+    private MainFrame mainFrame;
     /**
      * Creates new form StudentPanel
      */
-    public StudentMenuPanel(JFrame mainFrame) {
+    public StudentMenuPanel(MainFrame mainFrame) {
         this.mainFrame=mainFrame;
         initComponents();
-
+        setUpAction();
     }
 
     /**
@@ -35,19 +40,19 @@ public class StudentMenuPanel extends javax.swing.JPanel {
         checkInBtn = new javax.swing.JButton();
         attendResultBtn = new javax.swing.JButton();
         changePassBtn = new javax.swing.JButton();
+        signOutBtn = new javax.swing.JButton();
 
-        java.awt.GridBagLayout layout = new java.awt.GridBagLayout();
-        layout.columnWidths = new int[] {0, 150, 0};
-        layout.rowHeights = new int[] {0, 80, 0};
-        setLayout(layout);
+        setBackground(new java.awt.Color(255, 255, 255));
+        setLayout(new java.awt.GridBagLayout());
 
         checkInBtn.setText("Check In");
         checkInBtn.setMaximumSize(new java.awt.Dimension(300, 50));
         checkInBtn.setMinimumSize(new java.awt.Dimension(150, 50));
         checkInBtn.setPreferredSize(new java.awt.Dimension(200, 40));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         add(checkInBtn, gridBagConstraints);
 
         attendResultBtn.setText("Attendance Result");
@@ -55,8 +60,9 @@ public class StudentMenuPanel extends javax.swing.JPanel {
         attendResultBtn.setMinimumSize(new java.awt.Dimension(150, 50));
         attendResultBtn.setPreferredSize(new java.awt.Dimension(200, 40));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         add(attendResultBtn, gridBagConstraints);
 
         changePassBtn.setText("Change Password");
@@ -64,15 +70,54 @@ public class StudentMenuPanel extends javax.swing.JPanel {
         changePassBtn.setMinimumSize(new java.awt.Dimension(150, 50));
         changePassBtn.setPreferredSize(new java.awt.Dimension(200, 40));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         add(changePassBtn, gridBagConstraints);
+
+        signOutBtn.setText("Sign Out");
+        signOutBtn.setPreferredSize(new java.awt.Dimension(200, 40));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        add(signOutBtn, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void setUpAction()
+    {
+        attendResultBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel(new AttendanceResultPanel(mainFrame));
+            }
+        });
+        checkInBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel(new CheckInPanel(mainFrame));
+            }
+        });
+        signOutBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel(new MainPanel(mainFrame));
+                mainFrame.setAccount(null);
+            }
+        });
+        changePassBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel(new ChangePassPanel(mainFrame));
+            }
+        });
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton attendResultBtn;
     private javax.swing.JButton changePassBtn;
     private javax.swing.JButton checkInBtn;
+    private javax.swing.JButton signOutBtn;
     // End of variables declaration//GEN-END:variables
 }

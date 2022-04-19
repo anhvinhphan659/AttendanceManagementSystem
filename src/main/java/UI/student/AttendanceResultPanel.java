@@ -4,7 +4,16 @@
  */
 package UI.student;
 
-import javax.swing.*;
+import DAO.AttendanceDAO;
+import POJO.Attendance;
+import UI.MainFrame;
+import UI.minister.MinisterMenuPanel;
+import UI.util.AttendTable;
+import UI.util.AttendTableModel;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  *
@@ -12,13 +21,14 @@ import javax.swing.*;
  */
 public class AttendanceResultPanel extends javax.swing.JPanel {
 
-    private JFrame mainFrame;
+    private MainFrame mainFrame;
     /**
      * Creates new form AttendanceResultPanel
      */
-    public AttendanceResultPanel(JFrame mainFrame) {
+    public AttendanceResultPanel(MainFrame mainFrame) {
         this.mainFrame=mainFrame;
         initComponents();
+        setUpAction();
     }
 
     /**
@@ -31,10 +41,10 @@ public class AttendanceResultPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        Semester = new javax.swing.JLabel();
-        semesterCB = new javax.swing.JComboBox<>();
+        jPanel5 = new javax.swing.JPanel();
+        backBtn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -46,44 +56,44 @@ public class AttendanceResultPanel extends javax.swing.JPanel {
         jPanel1.setPreferredSize(new java.awt.Dimension(746, 70));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("ATTENDANCE RESULT");
-        jPanel1.add(jLabel1, java.awt.BorderLayout.CENTER);
-
         jPanel3.setPreferredSize(new java.awt.Dimension(746, 40));
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 20, 5));
-
-        Semester.setText("Semester:");
-        jPanel3.add(Semester);
-
-        semesterCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semester 1" }));
-        semesterCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                semesterCBActionPerformed(evt);
-            }
-        });
-        jPanel3.add(semesterCB);
-
         jPanel1.add(jPanel3, java.awt.BorderLayout.SOUTH);
+
+        jPanel5.setPreferredSize(new java.awt.Dimension(787, 35));
+        jPanel5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        backBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UI/resources/previous.png"))); // NOI18N
+        backBtn.setPreferredSize(new java.awt.Dimension(25, 25));
+        jPanel5.add(backBtn);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("ATTENDANCE RESULT");
+        jLabel1.setMinimumSize(new java.awt.Dimension(252, 30));
+        jLabel1.setPreferredSize(new java.awt.Dimension(400, 30));
+        jPanel5.add(jLabel1);
+
+        jPanel1.add(jPanel5, java.awt.BorderLayout.PAGE_START);
 
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jPanel2.setMinimumSize(new java.awt.Dimension(0, 400));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
+                new Object [][] {
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null}
+                },
+                new String [] {
+                        "Title 1", "Title 2", "Title 3", "Title 4"
+                }
         ) {
             Class[] types = new Class [] {
-                Object.class, Object.class, Object.class, Boolean.class
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -101,15 +111,56 @@ public class AttendanceResultPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_semesterCBActionPerformed
 
+    private void setUpAction()
+    {
+
+        //set up attend table
+        Object[] colnames={"Subject ID","Week 1","Week 2","Week 3",
+                "Week 4","Week 5","Week 6","Week 7",
+                "Week 8","Week 9","Week 10","Week 11","Week 12"
+                ,"Week 13","Week 14","Week 15"};
+        Class[] classNames={Object.class,  String.class, String.class, String.class
+                , String.class, String.class, String.class, String.class
+                , String.class, String.class, String.class, String.class
+                , String.class, String.class, String.class, String.class};
+//        classTable.setModel(null);
+        Object[][]data={
+
+        };
+        attendTable=new AttendTable(data,colnames,classNames);
+        attendTM=attendTable.getModel();
+        jScrollPane1.setViewportView(attendTable);
+        attendTable.getTableHeader().setReorderingAllowed(false);
+
+        //load data for attend table
+        ArrayList<Attendance> result =AttendanceDAO.getAttendTableByStudent(mainFrame.getAccount().getUsername());
+        for (Attendance att:result) {
+            attendTM.addRow(AttendanceDAO.convertAttendToRowData(att,true));
+        }
+
+
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel(new StudentMenuPanel(mainFrame));
+            }
+        });
+    }
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Semester;
+    private javax.swing.JButton backBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable2;
+    private AttendTable attendTable;
+    private AttendTableModel attendTM;
     private javax.swing.JComboBox<String> semesterCB;
     // End of variables declaration//GEN-END:variables
 }

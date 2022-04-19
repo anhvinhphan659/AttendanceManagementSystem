@@ -3,12 +3,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package UI.minister;
-
+import DAO.AttendanceDAO;
+import DAO.SubjectDAO;
+import POJO.Attendance;
+import POJO.AttendanceID;
+import POJO.Subject;
 import UI.MainFrame;
+import UI.util.AttendTable;
+import UI.util.AttendTableModel;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -24,7 +37,190 @@ public class ClassManagementPanel extends javax.swing.JPanel {
         this.mainFrame=mainFrame;
         initComponents();
         setUpAction();
-        
+
+    }
+
+    private void setUpAction()
+    {
+
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel(new MinisterMenuPanel(mainFrame));
+            }
+        });
+        //set up subject cb
+        subjectCBM=new DefaultComboBoxModel<>();
+        subjectCB.setModel(subjectCBM);
+        subjectList=SubjectDAO.getAllSubjects();
+
+        subjects = SubjectDAO.getAllSubjectNames(subjectList);
+        subjectCBM.addAll(subjects);
+
+        //set up attend table
+        Object[] colnames={"Student ID","Week 1","Week 2","Week 3",
+                "Week 4","Week 5","Week 6","Week 7",
+                "Week 8","Week 9","Week 10","Week 11","Week 12"
+                ,"Week 13","Week 14","Week 15"};
+        Class[] classNames={Object.class, String.class, String.class, String.class
+                , String.class, String.class, String.class, String.class
+                , String.class, String.class, String.class, String.class
+                , String.class, String.class, String.class, String.class};
+//        classTable.setModel(null);
+        Object[][]data={
+
+        };
+        classTable=new AttendTable(data,colnames,classNames);
+        classTable.getTableHeader().setReorderingAllowed(false);
+        classTM=classTable.getModel();
+
+
+
+        jScrollPane1.setViewportView(classTable);
+        subjectCB.setSelectedIndex(0);
+
+        showClassBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selected=subjectCB.getSelectedIndex();
+                if(selected>=0)
+                {
+                    List<Attendance> attendanceTable=AttendanceDAO.getAttendTableBySubject(subjectList.get(selected).getIdsubject());
+                    classTM.removeAllRow();
+                    for (int i=0;i<attendanceTable.size();i++)
+                    {
+                        classTM.addRow(AttendanceDAO.convertAttendToRowData(attendanceTable.get(i),false));
+                    }
+                }
+            }
+        });
+        editBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selected=classTable.getSelectedRow();
+                if(selected>=0)
+                {
+                    classTM.addEditableRow(selected);
+                }
+            }
+        });
+        showClassBtn.doClick();
+
+        applyBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList editRows=classTM.getEditableRows();
+                Subject subject=subjectList.get(subjectCB.getSelectedIndex());
+                while (editRows.size()>0)
+                {
+                    int row=(int) editRows.get(0);
+                    Object[] rowData=classTM.getRowData(row);
+                    //convert to attend string
+                    char[] attend="111111111111111".toCharArray();
+                    for(int i=1;i<rowData.length;i++)
+                    {
+                        attend[i-1]=(char) ((int)rowData[i]+'0');
+                    }
+                    //update in database
+                    AttendanceDAO.updateAttendance(String.valueOf(rowData[0]),subject.getIdsubject(),new String(attend));
+
+                    //pop out element
+                    editRows.remove(0);
+                }
+
+                //update editrow in TableModel
+                classTM.setEditableRows(editRows);
+            }
+        });
+
+        addBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String newStudentID=JOptionPane.showInputDialog(null,"Input new student ID:");
+                Attendance attendance=new Attendance();
+                AttendanceID attendanceID=new AttendanceID();
+                attendanceID.setIdstudent(newStudentID);
+                System.out.println(String.valueOf(subjects.get(subjectCB.getSelectedIndex())));
+                attendanceID.setIdsubject(String.valueOf(subjectList.get(subjectCB.getSelectedIndex()).getIdsubject()));
+                attendance.setIdattendance(attendanceID);
+                attendance.setAttend("111111111111111");
+                System.out.println("Check new student ID and commit to database");
+                AttendanceDAO.addNewAttendance(attendanceID.getIdstudent(),attendanceID.getIdsubject(),"111111111111111");
+                classTM.addRow(AttendanceDAO.convertAttendToRowData(attendance,false));
+
+            }
+        });
+
+        removeBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow=classTable.getSelectedRow();
+                if(selectedRow>=0)
+                {
+                    int option=JOptionPane.showConfirmDialog(null,"Do you want to delete selected row(s)?",
+                            "Delete Row",JOptionPane.YES_NO_OPTION);
+                    if(option==JOptionPane.YES_OPTION)
+                    {
+                        while (selectedRow>=0)
+                        {
+                            Object[] rowData=classTM.getRowData(selectedRow);
+                            //remove in database
+                            AttendanceDAO.removeStudentOfSubject(String.valueOf(subjectList.get(subjectCB.getSelectedIndex()).getIdsubject()),
+                                    String.valueOf(rowData[0]));
+
+                            //remove in tablemodel
+                            classTM.removeRow(selectedRow);
+                            selectedRow=classTable.getSelectedRow();
+                        }
+                    }
+                }
+
+            }
+        });
+
+        importBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fc=new JFileChooser();
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("*.csv","csv"));
+                int val=fc.showOpenDialog(null);
+                if(val==JFileChooser.APPROVE_OPTION)
+                {
+                    File studentFile=fc.getSelectedFile();
+                    String extensionFile=studentFile.getName().split("\\.")[1];
+                    if(extensionFile.equals("csv")==false)
+                    {
+                        JOptionPane.showMessageDialog(null,new Object[]{
+                                "Error file or csv is not compatible with template.",
+                                "Template example: ",
+                                "\tStudent ID,\n" +
+                                        "\tid1,\n" +
+                                        "\tid2,\n" +
+                                        "\t...\n" +
+                                        "\tidn\n"
+                        },"Error",JOptionPane.ERROR_MESSAGE);
+
+                        return;
+                    }
+
+                    ArrayList<String> studentList= readStudentFile(studentFile);
+                    for(int i=0;i<studentList.size();i++)
+                    {
+                        Attendance attendance=new Attendance();
+                        AttendanceID attendanceID=new AttendanceID();
+                        attendanceID.setIdstudent(studentList.get(i));
+                        attendanceID.setIdsubject(String.valueOf(subjectList.get(subjectCB.getSelectedIndex()).getIdsubject()));
+                        attendance.setIdattendance(attendanceID);
+                        attendance.setAttend("111111111111111");
+                        AttendanceDAO.addNewAttendance(attendanceID.getIdstudent(),attendanceID.getIdsubject(),"111111111111111");
+                        classTM.addRow(AttendanceDAO.convertAttendToRowData(attendance,false));
+                    }
+
+                }
+            }
+        });
+
     }
 
     /**
@@ -39,7 +235,7 @@ public class ClassManagementPanel extends javax.swing.JPanel {
         centerPanel = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+
         jPanel6 = new javax.swing.JPanel();
         editBtn = new javax.swing.JButton();
         removeBtn = new javax.swing.JButton();
@@ -50,7 +246,8 @@ public class ClassManagementPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        subjectCB = new javax.swing.JComboBox<>();
+        emptyCB = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         showClassBtn = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -65,73 +262,77 @@ public class ClassManagementPanel extends javax.swing.JPanel {
 
         jPanel5.setLayout(new java.awt.BorderLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+//        classTable.setModel(new javax.swing.table.DefaultTableModel(
+//                new Object [][] {
+//                        {null, null, null, null, null},
+//                        {null, null, null, null, null},
+//                        {null, null, null, null, null},
+//                        {null, null, null, null, null}
+//                },
+//                new String [] {
+//                        "Title 1", "Title 2", "Title 2", "Title 2", "Title 2"
+//                }
+//        ));
+//        jScrollPane1.setViewportView(classTable);
+//        if (classTable.getColumnModel().getColumnCount() > 0) {
+//            classTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(emptyCB));
+//        }
 
         jPanel5.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         centerPanel.add(jPanel5, java.awt.BorderLayout.CENTER);
 
+        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanel6.setMaximumSize(new java.awt.Dimension(150, 32767));
         jPanel6.setMinimumSize(new java.awt.Dimension(125, 100));
-        jPanel6.setPreferredSize(new java.awt.Dimension(125, 300));
+        jPanel6.setPreferredSize(new java.awt.Dimension(150, 300));
 
         editBtn.setText("Edit");
-        editBtn.setPreferredSize(new java.awt.Dimension(80, 30));
+        editBtn.setPreferredSize(new java.awt.Dimension(100, 30));
 
         removeBtn.setText("Remove");
-        removeBtn.setPreferredSize(new java.awt.Dimension(80, 30));
+        removeBtn.setPreferredSize(new java.awt.Dimension(100, 30));
 
         applyBtn.setText("Apply");
-        applyBtn.setPreferredSize(new java.awt.Dimension(80, 30));
+        applyBtn.setPreferredSize(new java.awt.Dimension(100, 30));
 
         addBtn.setText("Add");
-        addBtn.setPreferredSize(new java.awt.Dimension(80, 30));
+        addBtn.setPreferredSize(new java.awt.Dimension(100, 30));
 
         importBtn.setText("Import...");
-        importBtn.setPreferredSize(new java.awt.Dimension(80, 30));
+        importBtn.setPreferredSize(new java.awt.Dimension(100, 30));
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(applyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(removeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(importBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(23, 23, 23))
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                                .addContainerGap(25, Short.MAX_VALUE)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(applyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addComponent(removeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(importBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(23, 23, 23))
         );
         jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(removeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(importBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
-                .addComponent(applyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(removeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(importBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                                .addComponent(applyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
         );
 
         centerPanel.add(jPanel6, java.awt.BorderLayout.WEST);
@@ -152,9 +353,12 @@ public class ClassManagementPanel extends javax.swing.JPanel {
         jLabel2.setPreferredSize(new java.awt.Dimension(80, 25));
         jPanel4.add(jLabel2);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Subject 1" }));
-        jComboBox1.setPreferredSize(new java.awt.Dimension(80, 25));
-        jPanel4.add(jComboBox1);
+        subjectCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Subject 1" }));
+        subjectCB.setPreferredSize(new java.awt.Dimension(80, 25));
+        jPanel4.add(subjectCB);
+
+        emptyCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ABSENT", "NOT CHECKED", "ATTEND" }));
+//        jPanel4.add(emptyCB);
 
         jPanel1.add(jPanel4, java.awt.BorderLayout.CENTER);
 
@@ -189,25 +393,17 @@ public class ClassManagementPanel extends javax.swing.JPanel {
         add(topPanel, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void setUpAction()
-    {
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.changePanel(new MinisterMenuPanel(mainFrame));
-            }
-        });
-    }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
     private javax.swing.JButton applyBtn;
     private javax.swing.JButton backBtn;
     private javax.swing.JPanel centerPanel;
+    private AttendTable classTable;
     private javax.swing.JButton editBtn;
+    private javax.swing.JComboBox<String> emptyCB;
     private javax.swing.JButton importBtn;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> subjectCB;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -217,9 +413,51 @@ public class ClassManagementPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JButton removeBtn;
     private javax.swing.JButton showClassBtn;
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
+
+    private AttendTableModel classTM;
+    private DefaultComboBoxModel<String> subjectCBM;
+    private List<Subject> subjectList;
+    ArrayList<String>subjects;
+
+    //another function
+    public ArrayList<String> readStudentFile(File file)
+    {
+        ArrayList<String> ret=new ArrayList<>();
+        try{
+            BufferedReader br=new BufferedReader(new FileReader(file));
+            //skip first line
+            br.readLine();
+            String line=br.readLine();
+
+            while (line!=null)
+            {
+                ret.add(line);
+                System.out.println(line);
+                System.out.println(line);
+                line=br.readLine();
+            }
+        }
+        catch (IOException ex)
+        {
+            JOptionPane.showMessageDialog(null,new Object[]{
+                    "Error file or csv is not compatible with template.",
+                    "Template example: ",
+                    "Student ID\n" +
+                            "id1\n" +
+                            "id2\n" +
+                            "...\n" +
+                            "idn\n"
+            },"Error",JOptionPane.ERROR_MESSAGE);
+        }
+
+
+        return ret;
+
+    }
 }
+
+

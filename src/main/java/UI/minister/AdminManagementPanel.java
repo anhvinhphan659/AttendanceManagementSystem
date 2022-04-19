@@ -4,9 +4,16 @@
  */
 package UI.minister;
 
+import DAO.AccountDAO;
+import POJO.Account;
 import UI.MainFrame;
+import com.mysql.cj.jdbc.SuspendableXAConnection;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  *
@@ -21,7 +28,7 @@ public class AdminManagementPanel extends javax.swing.JPanel {
     public AdminManagementPanel(MainFrame mainFrame) {
         this.mainFrame=mainFrame;
         initComponents();
-
+        setUpAction();
     }
 
     /**
@@ -56,23 +63,25 @@ public class AdminManagementPanel extends javax.swing.JPanel {
 
         jPanel5.setLayout(new java.awt.BorderLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        DefaultTableModel adminTM=new javax.swing.table.DefaultTableModel(
+                new Object [][] {
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null}
+                },
+                new String [] {
+                        "Title 1", "Title 2", "Title 3", "Title 4"
+                }
+        );
+        jTable1.setModel(adminTM);
         jScrollPane1.setViewportView(jTable1);
 
         jPanel5.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         centerPanel.add(jPanel5, java.awt.BorderLayout.CENTER);
 
+        jPanel6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel6.setMaximumSize(new java.awt.Dimension(150, 32767));
         jPanel6.setMinimumSize(new java.awt.Dimension(125, 100));
         jPanel6.setPreferredSize(new java.awt.Dimension(150, 300));
@@ -90,6 +99,7 @@ public class AdminManagementPanel extends javax.swing.JPanel {
 
         jPanel1.add(centerPanel, java.awt.BorderLayout.CENTER);
 
+        topPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         topPanel.setPreferredSize(new java.awt.Dimension(684, 100));
         topPanel.setLayout(new java.awt.BorderLayout());
 
@@ -113,6 +123,75 @@ public class AdminManagementPanel extends javax.swing.JPanel {
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void setUpAction()
+    {
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel(new MinisterMenuPanel(mainFrame));
+            }
+        });
+
+        accountTM=new DefaultTableModel(
+                new Object[][]{},
+                new Object[]{"Username","Is Admin","Is Active"}
+        );
+        jTable1.setModel(accountTM);
+        //load data to table
+        List<Account> adminList= AccountDAO.getAllAdminAccounts();
+        for(int i=0;i<adminList.size();i++)
+        {
+            accountTM.addRow(AccountDAO.convertAccountToRowData(adminList.get(i)));
+        }
+
+        resetPassBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selected=jTable1.getSelectedRow();
+                if(selected>=0) {
+                    String usernameReset = String.valueOf(accountTM.getValueAt(selected, 0));
+                    AccountDAO.resetPassword(usernameReset);
+                    if(usernameReset.equals(mainFrame.getAccount().getUsername()))
+                    {
+                        Account account=mainFrame.getAccount();
+                        account.setPassword(AccountDAO.hashPassword(account.getUsername()));
+                        mainFrame.setAccount(account);
+                    }
+                    System.out.println("Password update!");
+                }
+            }
+        });
+
+        addBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTextField username = new JTextField();
+                JTextField password = new JPasswordField();
+                Object[] message = {
+                        "Username:", username,
+                        "Password:", password
+                };
+
+                int option=JOptionPane.showOptionDialog(null,message,"Add new admin",JOptionPane.OK_OPTION,JOptionPane.QUESTION_MESSAGE,null,
+                        new Object[]{"Confirm","Cancel"},1);
+
+                if(option==0)
+                {
+                    String userName=username.getText();
+                    String pass=password.getText();
+                    //add to database
+                    boolean res=AccountDAO.createAdminAccount(userName,pass);
+                    //add to row
+                    if(res)
+                        accountTM.addRow(new Object[]{userName,true,true});
+                }
+
+                System.out.println(option);
+            }
+        });
+
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
@@ -128,4 +207,6 @@ public class AdminManagementPanel extends javax.swing.JPanel {
     private javax.swing.JButton resetPassBtn;
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
+
+    private DefaultTableModel accountTM;
 }

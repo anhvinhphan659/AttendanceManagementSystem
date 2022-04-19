@@ -1,13 +1,18 @@
 package POJO;
 
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.io.Serializable;
 
 @Embeddable
 public class AttendanceID implements Serializable
 {
+
     private String idstudent;
     private String idsubject;
+
+
 
     public AttendanceID() {
     }
@@ -34,5 +39,15 @@ public class AttendanceID implements Serializable
                 "idstudent='" + idstudent + '\'' +
                 ", idcourse='" + idsubject + '\'' +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

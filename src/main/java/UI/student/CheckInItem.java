@@ -4,7 +4,14 @@
  */
 package UI.student;
 
+import DAO.AttendanceDAO;
+import POJO.Attendance;
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 
 /**
  *
@@ -12,13 +19,50 @@ import javax.swing.*;
  */
 public class CheckInItem extends javax.swing.JPanel {
 
-    private JFrame mainFrame;
+    //GMT+7
+    public static int TIME_ZONE_7_PLUS =3600*7;
     /**
      * Creates new form CheckInItem
      */
-    public CheckInItem(JFrame mainFrame) {
-        this.mainFrame=mainFrame;
+
+
+    public CheckInItem() {
+
         initComponents();
+        setUpOther();
+    }
+
+    private void setUpOther() {
+        setPreferredSize(new Dimension(700,100));
+        checkInBtn.setEnabled(false);
+        checkInBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(attendance!=null)
+                {
+                    System.out.println("Commit attenance to database");
+                    char[] attend=attendance.getAttend().toCharArray();
+                    if(thWeek>=0)
+                    {
+                        attend[thWeek]='2';
+                        for (int i=0;i<thWeek;i++)
+                        {
+                            if(attend[i]!='2')
+                                attend[i]='0';
+                        }
+                    }
+                    attendance.setAttend(new String(attend));
+                    AttendanceDAO.updateAttendance(attendance.getIdattendance().getIdstudent(),attendance.getIdattendance().getIdsubject(),attendance.getAttend());
+                    setCheckInBtnChecked();
+                }
+            }
+        });
+    }
+
+    public void setCheckInBtnChecked()
+    {
+        checkInBtn.setEnabled(false);
+        checkInBtn.setText("CHECKED");
     }
 
     /**
@@ -30,6 +74,7 @@ public class CheckInItem extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         courseNameLB = new javax.swing.JLabel();
         scheduleLB = new javax.swing.JLabel();
@@ -37,12 +82,17 @@ public class CheckInItem extends javax.swing.JPanel {
         jPanel7 = new javax.swing.JPanel();
         checkInBtn = new javax.swing.JButton();
         checkInStateLB = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        nextTimeLB = new javax.swing.JLabel();
 
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        setInheritsPopupMenu(true);
+        setMaximumSize(new java.awt.Dimension(2147483647, 105));
+        setPreferredSize(new java.awt.Dimension(242, 100));
         setLayout(new java.awt.BorderLayout());
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanel6.setLayout(new java.awt.BorderLayout());
 
         courseNameLB.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -51,38 +101,37 @@ public class CheckInItem extends javax.swing.JPanel {
 
         scheduleLB.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 12)); // NOI18N
         scheduleLB.setText("Schedule");
+        scheduleLB.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         scheduleLB.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         jPanel6.add(scheduleLB, java.awt.BorderLayout.CENTER);
 
-        add(jPanel6, java.awt.BorderLayout.CENTER);
+        jPanel1.add(jPanel6, java.awt.BorderLayout.CENTER);
 
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanel5.setPreferredSize(new java.awt.Dimension(150, 100));
         jPanel5.setLayout(new java.awt.BorderLayout());
 
-        jPanel7.setPreferredSize(new java.awt.Dimension(150, 50));
+        jPanel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 1, 5, 1));
+        jPanel7.setPreferredSize(new java.awt.Dimension(150, 80));
+        jPanel7.setLayout(new javax.swing.BoxLayout(jPanel7, javax.swing.BoxLayout.Y_AXIS));
 
         checkInBtn.setText("CHECK IN");
+        checkInBtn.setAlignmentX(0.5F);
         checkInBtn.setMaximumSize(new java.awt.Dimension(110, 40));
         checkInBtn.setPreferredSize(new java.awt.Dimension(100, 25));
         jPanel7.add(checkInBtn);
 
         checkInStateLB.setFont(new java.awt.Font("Yu Gothic Light", 0, 12)); // NOI18N
         checkInStateLB.setText("Check-in state");
+        checkInStateLB.setAlignmentX(0.5F);
+        checkInStateLB.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         jPanel7.add(checkInStateLB);
 
         jPanel5.add(jPanel7, java.awt.BorderLayout.PAGE_START);
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jLabel6.setText("Next time check-in");
-        jPanel8.add(jLabel6);
+        jPanel1.add(jPanel5, java.awt.BorderLayout.EAST);
 
-        nextTimeLB.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 12)); // NOI18N
-        nextTimeLB.setText("10-20-20002");
-        jPanel8.add(nextTimeLB);
-
-        jPanel5.add(jPanel8, java.awt.BorderLayout.CENTER);
-
-        add(jPanel5, java.awt.BorderLayout.EAST);
+        add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -90,12 +139,54 @@ public class CheckInItem extends javax.swing.JPanel {
     private javax.swing.JButton checkInBtn;
     private javax.swing.JLabel checkInStateLB;
     private javax.swing.JLabel courseNameLB;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JLabel nextTimeLB;
     private javax.swing.JLabel scheduleLB;
+    private Attendance attendance;
     // End of variables declaration//GEN-END:variables
+
+    public void setCheckInBtnEnable(boolean state)
+    {
+        checkInBtn.setEnabled(state);
+    }
+
+    public void setCourseName(String courseName)
+    {
+        courseNameLB.setText(courseName);
+    }
+
+    public void setCheckInState(String checkInState)
+    {
+        checkInStateLB.setText(checkInState);
+    }
+
+    public void setSchedule(String schedule)
+    {
+        scheduleLB.setText(schedule);
+    }
+
+//    public void setNextTime(String nextTime)
+//    {
+//        nextTimeLB.setText(nextTime);
+//    }
+
+    public Attendance getAttendance() {
+        return attendance;
+    }
+
+    private int thWeek=-1;
+
+    public void setAttendance(Attendance attendance) {
+        this.attendance = attendance;
+    }
+
+    public int getThWeek() {
+        return thWeek;
+    }
+
+    public void setThWeek(int thWeek) {
+        this.thWeek = thWeek;
+    }
 }

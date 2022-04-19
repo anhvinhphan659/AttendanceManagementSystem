@@ -4,7 +4,18 @@
  */
 package UI.student;
 
+import DAO.AttendanceDAO;
+import DAO.SubjectDAO;
+import POJO.Attendance;
+import POJO.Subject;
+import UI.MainFrame;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.TimeZone;
 
 /**
  *
@@ -12,13 +23,15 @@ import javax.swing.*;
  */
 public class CheckInPanel extends javax.swing.JPanel {
 
-    private JFrame mainFrame;
+
+    private MainFrame mainFrame;
     /**
      * Creates new form CheckInPanel
      */
-    public CheckInPanel(JFrame mainFrame) {
+    public CheckInPanel(MainFrame mainFrame) {
         this.mainFrame=mainFrame;
         initComponents();
+        setUpAction();
     }
 
     /**
@@ -30,129 +43,136 @@ public class CheckInPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-        courseNameLB = new javax.swing.JLabel();
-        scheduleLB = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
-        checkInBtn = new javax.swing.JButton();
-        checkInStateLB = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        nextTimeLB = new javax.swing.JLabel();
+        jPanel9 = new javax.swing.JPanel();
+        backBtn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setMaximumSize(new java.awt.Dimension(32767, 100));
-        jPanel1.setPreferredSize(new java.awt.Dimension(627, 80));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("COURSE CHECK-IN");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(372, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
-        );
-
-        add(jPanel1, java.awt.BorderLayout.NORTH);
-
-        jPanel3.setBorder(new javax.swing.border.EmptyBorder(10,10,10,10)
-        );
+        jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        jPanel2.setMaximumSize(new java.awt.Dimension(32767, 100));
-
-        jPanel4.setBackground(new java.awt.Color(204, 102, 0));
-        jPanel4.setForeground(new java.awt.Color(255, 0, 51));
-        jPanel4.setPreferredSize(new java.awt.Dimension(700, 125));
-        jPanel4.setLayout(new java.awt.BorderLayout());
-
-        jPanel6.setLayout(new java.awt.BorderLayout());
-
-        courseNameLB.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        courseNameLB.setText("Course Name");
-        jPanel6.add(courseNameLB, java.awt.BorderLayout.NORTH);
-
-        scheduleLB.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 12)); // NOI18N
-        scheduleLB.setText("Schedule");
-        scheduleLB.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel6.add(scheduleLB, java.awt.BorderLayout.CENTER);
-
-        jPanel4.add(jPanel6, java.awt.BorderLayout.CENTER);
-
-        jPanel5.setPreferredSize(new java.awt.Dimension(150, 100));
-        jPanel5.setLayout(new java.awt.BorderLayout());
-
-        jPanel7.setPreferredSize(new java.awt.Dimension(150, 50));
-
-        checkInBtn.setText("CHECK IN");
-        checkInBtn.setMaximumSize(new java.awt.Dimension(110, 40));
-        checkInBtn.setPreferredSize(new java.awt.Dimension(100, 25));
-        jPanel7.add(checkInBtn);
-
-        checkInStateLB.setFont(new java.awt.Font("Yu Gothic Light", 0, 12)); // NOI18N
-        checkInStateLB.setText("Check-in state");
-        jPanel7.add(checkInStateLB);
-
-        jPanel5.add(jPanel7, java.awt.BorderLayout.PAGE_START);
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jLabel6.setText("Next time check-in");
-        jPanel8.add(jLabel6);
-
-        nextTimeLB.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 12)); // NOI18N
-        nextTimeLB.setText("10-20-20002");
-        jPanel8.add(nextTimeLB);
-
-        jPanel5.add(jPanel8, java.awt.BorderLayout.CENTER);
-
-        jPanel4.add(jPanel5, java.awt.BorderLayout.EAST);
-
-        jPanel2.add(jPanel4);
-
+        jPanel2.setMaximumSize(new java.awt.Dimension(1400, 100));
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
         jScrollPane1.setViewportView(jPanel2);
 
         jPanel3.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         add(jPanel3, java.awt.BorderLayout.CENTER);
+
+        jPanel9.setPreferredSize(new java.awt.Dimension(787, 50));
+        jPanel9.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        backBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UI/resources/previous.png"))); // NOI18N
+        backBtn.setPreferredSize(new java.awt.Dimension(25, 25));
+        jPanel9.add(backBtn);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("CHECK IN");
+        jLabel1.setMinimumSize(new java.awt.Dimension(252, 30));
+        jLabel1.setPreferredSize(new java.awt.Dimension(400, 30));
+        jPanel9.add(jLabel1);
+
+        add(jPanel9, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void setUpAction()
+    {
+
+        checkInList=new ArrayList<>();
+        ArrayList<Object[]> checkIns= AttendanceDAO.getAllSubjectsStudentAttend(mainFrame.getAccount().getUsername());
+        System.out.println(checkIns.size());
+        for (int i=0;i<checkIns.size();i++)
+        {
+            Object[] rowData=checkIns.get(i);
+            System.out.println((Subject)rowData[1]);
+            CheckInItem checkInItem=createCheckInItem((Attendance) rowData[0],(Subject) rowData[1]);
+            if(checkInItem!=null)
+            {
+                jPanel2.add(checkInItem);
+            }
+        }
+//        System.out.println(subjects.size());
+//        Object[] att_sub=(Object[]) subjects.get(0);
+//        System.out.println(att_sub.length);
+//        System.out.println(att_sub[1]);
+//        System.out.println(att_sub[0]);
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.changePanel(new StudentMenuPanel(mainFrame));
+            }
+        });
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton checkInBtn;
-    private javax.swing.JLabel checkInStateLB;
-    private javax.swing.JLabel courseNameLB;
+    private javax.swing.JButton backBtn;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel nextTimeLB;
-    private javax.swing.JLabel scheduleLB;
     // End of variables declaration//GEN-END:variables
+
+    private ArrayList<Object[]> checkInList;
+
+    private CheckInItem createCheckInItem(Attendance attendance, Subject subject)
+    {
+
+        //check condition
+
+        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy MM dd hh:mm a zzz");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+7:00"));
+        java.util.Date today=new java.util.Date();
+        today=new java.util.Date(today.getTime()+ CheckInItem.TIME_ZONE_7_PLUS);
+        java.util.Date startDay=new java.util.Date(subject.getStartday().getTime());
+        java.util.Date endDay=new java.util.Date(subject.getEndday().getTime());
+        System.out.println(today);
+        System.out.println(startDay);
+        System.out.println(endDay);
+        System.out.println(String.format("%b-%b-%b",(today.getDate()-startDay.getDate())%7!=0,
+                startDay.after(today),
+                today.after(endDay)));
+        System.out.println(today.getDate()-startDay.getDate());
+        //not date
+        if((today.getDate()-startDay.getDate())%7!=0||startDay.after(today)||today.after(endDay))
+            return null;
+
+
+        //not in time
+        int inSession=SubjectDAO.isInSession(today,SubjectDAO.convertScheduleToObject(subject.getSchedule(),1),
+                SubjectDAO.convertScheduleToObject(subject.getSchedule(),2));
+
+        System.out.println(inSession);
+
+        CheckInItem checkInItem=new CheckInItem();
+        checkInItem.setAttendance(attendance);
+        checkInItem.setCourseName(subject.getSubjectName());
+        checkInItem.setSchedule(subject.getSchedule());
+        int thweek=(today.getDate()-startDay.getDate())/7;
+        checkInItem.setThWeek(thweek);
+
+        if(inSession==1)
+            checkInItem.setCheckInState("Over time");
+        else if(inSession==-1)
+            checkInItem.setCheckInState("BeforeTime");
+        else {//in time
+            checkInItem.setCheckInState("In Time");
+            checkInItem.setAttendance(attendance);
+            checkInItem.setCheckInBtnEnable(true);
+            //handle next time check in
+            char[] attend=attendance.getAttend().toCharArray();
+            if(attend[thweek]=='2')
+                checkInItem.setCheckInBtnChecked();
+        }
+
+        return checkInItem;
+    }
 }

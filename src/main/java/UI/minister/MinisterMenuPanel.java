@@ -42,21 +42,26 @@ public class MinisterMenuPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         subjectManageBtn = new javax.swing.JButton();
         classManageBtn = new javax.swing.JButton();
-        studentAttendBtn = new javax.swing.JButton();
         changePassBtn = new javax.swing.JButton();
         signOutBtn = new javax.swing.JButton();
         adminManageBtn = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
+        jPanel2.setBackground(new java.awt.Color(198, 241, 231));
         jPanel2.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        jPanel2.setPreferredSize(new java.awt.Dimension(336, 125));
+        jPanel2.setLayout(new java.awt.BorderLayout());
 
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("ADMIN MENU");
-        jPanel2.add(jLabel1);
+        jPanel2.add(jLabel1, java.awt.BorderLayout.CENTER);
 
         add(jPanel2, java.awt.BorderLayout.PAGE_START);
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         subjectManageBtn.setText("Subject Mangement");
@@ -76,16 +81,6 @@ public class MinisterMenuPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanel1.add(classManageBtn, gridBagConstraints);
-
-        studentAttendBtn.setText("Student Attendance");
-        studentAttendBtn.setMaximumSize(new java.awt.Dimension(300, 50));
-        studentAttendBtn.setMinimumSize(new java.awt.Dimension(200, 40));
-        studentAttendBtn.setPreferredSize(new java.awt.Dimension(150, 40));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jPanel1.add(studentAttendBtn, gridBagConstraints);
 
         changePassBtn.setText("Change Password");
         changePassBtn.setMaximumSize(new java.awt.Dimension(300, 50));
@@ -150,16 +145,17 @@ public class MinisterMenuPanel extends javax.swing.JPanel {
                 mainFrame.changePanel(new ClassManagementPanel(mainFrame));
             }
         });
-        studentAttendBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.changePanel(new StudentAttendancePanel(mainFrame));
-            }
-        });
+//        studentAttendBtn.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                mainFrame.changePanel(new StudentAttendancePanel(mainFrame));
+//            }
+//        });
         signOutBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.changePanel(new MainPanel(mainFrame));
+                mainFrame.setAccount(null);
             }
         });
         changePassBtn.addActionListener(new ActionListener() {

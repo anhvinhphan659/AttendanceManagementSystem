@@ -13,8 +13,9 @@ import java.sql.Date;
 
 public class Main {
     public static void main(String[] args) {
+
         MainFrame mainFrame=new MainFrame();
-        HibernateUtil.config();
+
 //        SessionFactory factory=HibernateUtil.getSessionFactory();
 //        System.out.println(factory.toString());
 //        Session session= factory.getCurrentSession();
